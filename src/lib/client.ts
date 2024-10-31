@@ -27,11 +27,9 @@ export async function ConnectWalletClient() {
 
 export async function ConnectPublicClient() {
 	const publicClient = createPublicClient({
-		batch: {
-			multicall: true,
-		},
 		chain: sepolia,
-		transport: http("https://rpc.sepolia.org"),
+		// transport: http("https://rpc.sepolia.org"),
+		transport: http(),
 	});
 
 	return publicClient;

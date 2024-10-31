@@ -1,4 +1,6 @@
 "use client";
+import { ConnectButton } from "@/components/ConnectButton";
+import { ConnectWallet } from "@/components/ConnectWallet";
 import { useJokes } from "@/hooks/useJokes";
 import { useState } from "react";
 import { Button } from "../components/Button";
@@ -33,6 +35,11 @@ export default function Home() {
 					<Button onClick={handlePreviousJoke}>Previous Joke</Button>
 					<Button onClick={handleNextJoke}>Next Joke</Button>
 				</div>
+				<ConnectWallet
+					shouldShowRewardSection={jokes.length}
+					index={currentJokeIndex}
+					joke={jokes[currentJokeIndex]}
+				/>
 			</main>
 		</div>
 	);
