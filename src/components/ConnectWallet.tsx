@@ -4,10 +4,12 @@ import { ConnectButton } from "@/components/ConnectButton"; // TODO: create a co
 import { RewardSection } from "@/components/RewardSection";
 import { useVote } from "@/hooks/useVote";
 import { useWallet } from "@/hooks/useWallet";
+import { useWithdraw } from "@/hooks/useWithdraw";
 import { abi } from "@/lib/abi";
 import { ConnectPublicClient, ConnectWalletClient } from "@/lib/client";
 import React, { useState, useEffect } from "react";
 import { getContract } from "viem";
+import { WithdrawSection } from "./WithdrawSection";
 
 export const ConnectWallet = ({
 	shouldShowRewardSection,
@@ -20,6 +22,11 @@ export const ConnectWallet = ({
 
 	const { address, balance, handleClick } = useWallet(dadJokesContract);
 	const { handleVote } = useVote({
+		dadJokesContract,
+		walletClient: walletStateClient,
+		publicClient: publicStateClient,
+	});
+	const { handleWithdraw } = useWithdraw({
 		dadJokesContract,
 		walletClient: walletStateClient,
 		publicClient: publicStateClient,
@@ -59,7 +66,17 @@ export const ConnectWallet = ({
 	return (
 		<>
 			{shouldShowRewardSection ? (
-				<RewardSection index={index} handleVote={handleVote} />
+				<>
+					<RewardSection index={index} handleVote={handleVote} />
+					<div className="mt-6 flex items-center w-full bg-gray-600 bg-opacity-25 p-4 rounded">
+						<div className="flex items-center justify-center w-full">
+							<WithdrawSection
+								handleWithdraw={handleWithdraw}
+								balance={balance}
+							/>
+						</div>
+					</div>
+				</>
 			) : (
 				<>Can't reward without jokes</>
 			)}
