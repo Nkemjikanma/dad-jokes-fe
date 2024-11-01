@@ -2,6 +2,7 @@
 
 import { ConnectButton } from "@/components/ConnectButton"; // TODO: create a component for this
 import { RewardSection } from "@/components/RewardSection";
+import { useSubmitJoke } from "@/hooks/useSubmitJoke";
 import { useVote } from "@/hooks/useVote";
 import { useWallet } from "@/hooks/useWallet";
 import { useWithdraw } from "@/hooks/useWithdraw";
@@ -9,6 +10,7 @@ import { abi } from "@/lib/abi";
 import { ConnectPublicClient, ConnectWalletClient } from "@/lib/client";
 import React, { useState, useEffect } from "react";
 import { getContract } from "viem";
+import { JokeModal } from "./JokeModal";
 import { WithdrawSection } from "./WithdrawSection";
 
 export const ConnectWallet = ({
@@ -19,6 +21,8 @@ export const ConnectWallet = ({
 	const [publicStateClient, setStatePublicClient] = useState(null);
 	const [walletStateClient, setStateWalletClient] = useState(null);
 	const [dadJokesContract, setDadJokesContract] = useState(null);
+	const [setup, setSetup] = useState("");
+	const [punchline, setPunchline] = useState("");
 
 	const { address, balance, handleClick } = useWallet(dadJokesContract);
 	const { handleVote } = useVote({
@@ -32,6 +36,11 @@ export const ConnectWallet = ({
 		publicClient: publicStateClient,
 	});
 
+	const { isModalOpen, setIsModalOpen, handleSubmit } = useSubmitJoke({
+		dadJokesContract,
+		walletClient: walletStateClient,
+		publicClient: publicStateClient,
+	});
 	useEffect(() => {
 		const initializeClients = async () => {
 			try {
@@ -65,6 +74,26 @@ export const ConnectWallet = ({
 
 	return (
 		<>
+			<div>
+				<button
+					className="bg-primaryDark text-primary:ight font-sans px-4 py-2 rounded"
+					onClick={() => setIsModalOpen(true)}
+					type="button"
+				>
+					Add joke
+				</button>
+				<JokeModal
+					{...{
+						isModalOpen,
+						setIsModalOpen,
+						handleSubmit,
+						setup,
+						setSetup,
+						punchline,
+						setPunchline,
+					}}
+				/>
+			</div>
 			{shouldShowRewardSection ? (
 				<>
 					<RewardSection index={index} handleVote={handleVote} />

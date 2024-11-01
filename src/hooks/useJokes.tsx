@@ -16,11 +16,6 @@ type JokesType = Joke[];
 // 	return await ConnectPublicClient();
 // };
 const publicClient = ConnectPublicClient();
-// const dadJokesContract = getContract({
-// 	address: "0xb98535cCbe3E7cf3748F82c0d9594B95fB2DBb02",
-// 	abi: abi,
-// 	client: { public: publicClient },
-// });
 
 export const useJokes = () => {
 	const [jokes, setJokes] = useState<JokesType>([]);
@@ -28,11 +23,13 @@ export const useJokes = () => {
 	useEffect(() => {
 		const fetchJokes = async () => {
 			try {
-				const fetchedJokes = (await publicClient).readContract({
-					address: "0xb98535cCbe3E7cf3748F82c0d9594B95fB2DBb02",
+				const fetchedJokes = (await (
+					await publicClient
+				).readContract({
 					abi: abi,
+					address: "0xb98535cCbe3E7cf3748F82c0d9594B95fB2DBb02",
 					functionName: "getJokes",
-				});
+				})) as JokesType;
 				setJokes(fetchedJokes);
 			} catch (error) {
 				console.log("Error fetching jokes: ", error);
